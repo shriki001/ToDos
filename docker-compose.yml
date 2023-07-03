@@ -1,0 +1,58 @@
+version: "3.7"
+services:
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  notification_server:
+    container_name: notification_server
+    build:
+      context: ./notificationServer
+      dockerfile: Dockerfile
+    ports:
+      - 3002:3002
+    depends_on:
+      - rabbitmq
+
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+      - notification_server
+
+  mongo:
+    container_name: mongo
+    image: mongo:4.4.8
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo:/data/db
+
+volumes:
+  mongo:
+    driver: local
+  rabbitmq_data:
+    driver: local
