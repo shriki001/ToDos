@@ -8,7 +8,7 @@
 
 *Todos*
 
-GET {{url}}/api
+GET {{url}}/api?page=1 # paginatio support (default page is 0, if not specify the page query)
 
 POST {{url}}/api
 body: {
