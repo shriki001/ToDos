@@ -1,6 +1,9 @@
 # ToDo App
 # How to use?
 * docker-compose up --build -d
+* app will show on http://localhost:3000
+
+
 # This project includes:
 
 *Todos*
